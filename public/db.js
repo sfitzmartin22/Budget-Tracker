@@ -21,7 +21,7 @@ if(db.objectStoreNames.length === 0) {
 
 request.onerror = function (e) {
     console.log(e.target.errorcode);
-}
+};
 
 function checkDatabase() {
     console.log('Checking database');
@@ -66,6 +66,7 @@ request.onsuccess = function (e) {
 const saveRecord = (record) => {
     console.log("Save record has been invoked");
     const transaction = db.transaction(["BudgetStore"], "readwrite");
+    const store = transaction.objectStore("BudgetStore");
     store.add(record);
 };
 
