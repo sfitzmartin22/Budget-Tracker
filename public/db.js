@@ -1,7 +1,7 @@
 let db;
-let offlineVersion;
+let budgetVersion;
 
-const request = indexedDB.open("BudgetDB", offlineVersion || 21);
+const request = indexedDB.open("BudgetDB", budgetVersion || 21);
 
 request.onupgradeneeded = function (e) {
     console.log("Upgrade needed in IndexDB");
@@ -16,8 +16,7 @@ db = e.target.result;
 
 if(db.objectStoreNames.length === 0) { 
     db.createObjectStore('BudgetStore', { autoincrement: true});
-}
-};
+}};
 
 request.onerror = function (e) {
     console.log(e.target.errorcode);
