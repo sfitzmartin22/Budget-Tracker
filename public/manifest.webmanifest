@@ -1,7 +1,7 @@
 {
     "name": "Budget-Tracker",
     "short_name": "Budget-App",
-    "start_url": "Index.html",
+    "start_url": "/",
     "display": "standalone",
     "backgroundColor": "#FFA500",
     "theme_color": "#000000",
