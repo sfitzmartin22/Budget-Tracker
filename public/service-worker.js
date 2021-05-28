@@ -40,21 +40,47 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    if (event.request.url.startsWith(self.location.origin)) {
+    if (event.request.url.includes("/api/")) {
         event.respondWith(
-            caches.match(event.request).then((cachedResponse) => {
-                if (cachedResponse) {
-                    return cachedResponse;
-                }
+            caches.open(PRECACHE).then(cache => {
+                return fetch(event.request)
+                .then(response => {
+                    if (response.status === 200) {
+                        cache.put(event.request.url, response.clone());
+                    }
+                    return response;
+                })
+                .catch(err => {
+                    return cache.match(event.request);
+                });
+            }).catch(err => console.log(err))
+        );
+            return;
+        }
 
-                return caches.open(RUNTIME).then((cache) => {
-                    return fetch(event.request).then((response) => {
-                        return cache.put(event.request, response.clone()).then(() => {
-                            return response;
-                        });
-                    });
+        event.respondWith(
+            caches.open(RUNTIME).then(cache => {
+                return cache.match(event.request).then(response => {
+                    return response || fetch(event.request);
                 });
             })
         );
-    }
-});
+    });
+        
+    //     event.respondWith(
+    //         caches.match(event.request).then((cachedResponse) => {
+    //             if (cachedResponse) {
+    //                 return cachedResponse;
+    //             }
+
+    //             return caches.open(RUNTIME).then((cache) => {
+    //                 return fetch(event.request).then((response) => {
+    //                     return cache.put(event.request, response.clone()).then(() => {
+    //                         return response;
+    //                     });
+    //                 });
+    //             });
+    //         })
+    //     );
+    // }
+
