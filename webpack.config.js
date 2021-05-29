@@ -10,7 +10,7 @@ const config = {
 
     mode: "production",
     plugins: [
-    new WebpackPwaManifest({
+    new WebpackManifest({
       
       filename: "manifest.json",
       inject: false,
