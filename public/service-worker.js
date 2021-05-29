@@ -4,9 +4,7 @@ const FILES_TO_CACHE = [
     "/styles.css",
     "/db.js",
     "/index.js",
-    "/manifest.webmanifest",
-    "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
-    "https://cdn.jsdelivr.net/npm/chart.js@2.8.0",
+    "/manifest.webmanifest"
 ];
 
 const PRECACHE = "precache-v1";
