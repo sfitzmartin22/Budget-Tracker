@@ -1,4 +1,4 @@
-const request = indexedDB.open("BudgetDB", 1);
+const request = indexedDB.open("TransactionDB", 1);
 let db;
 
 request.onupgradeneeded = ({ target }) => {
@@ -16,6 +16,13 @@ request.onsuccess = ({ target }) => {
     }
   };
 
+  
+const saveRecord = (record) => {
+    console.log("Save record has been invoked");
+    let transaction = db.transaction("pending", "readwrite");
+    let store = transaction.objectStore("pending");
+    store.add(record);
+};
 
 function checkDatabase() {
     console.log('Checking database');
@@ -51,11 +58,5 @@ function checkDatabase() {
 }
 
 
-const saveRecord = (record) => {
-    console.log("Save record has been invoked");
-    let transaction = db.transaction("pending", "readwrite");
-    let store = transaction.objectStore("pending");
-    store.add(record);
-};
 
 window.addEventListener("online", checkDatabase);
