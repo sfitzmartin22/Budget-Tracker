@@ -4,7 +4,6 @@ const FILES_TO_CACHE = [
     "/styles.css",
     "/db.js",
     "/index.js",
-    "/manifest.webmanifest",
 ];
 
 const PRECACHE = "precache-v1";
@@ -12,7 +11,7 @@ const RUNTIME = "runtime";
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        caches.open(PRECACHE)
+        caches.open(RUNTIME)
             .then((cache) => cache.addAll(FILES_TO_CACHE))
             .then(self.skipWaiting())
     );
@@ -40,45 +39,28 @@ self.addEventListener("activate", (event) => {
 self.addEventListener('fetch', (event) => {
     if (event.request.url.includes("/api/")) {
         event.respondWith(
-            caches.open(PRECACHE).then(cache => {
+            caches.open(PRECACHE).then((cache) => {
                 return fetch(event.request)
-                .then(response => {
+                .then((response) => {
                     if (response.status === 200) {
                         cache.put(event.request.url, response.clone());
                     }
                     return response;
                 })
-                .catch(err => {
+                .catch((err) => {
                     return cache.match(event.request);
                 });
-            }).catch(err => console.log(err))
+            })
         );
             return;
         }
 
         event.respondWith(
-            caches.open(RUNTIME).then(cache => {
-                return cache.match(event.request).then(response => {
+            caches.open(RUNTIME).then((cache) => {
+                return cache.match(event.request).then((response) => {
                     return response || fetch(event.request);
                 });
             })
         );
     });
         
-    //     event.respondWith(
-    //         caches.match(event.request).then((cachedResponse) => {
-    //             if (cachedResponse) {
-    //                 return cachedResponse;
-    //             }
-
-    //             return caches.open(RUNTIME).then((cache) => {
-    //                 return fetch(event.request).then((response) => {
-    //                     return cache.put(event.request, response.clone()).then(() => {
-    //                         return response;
-    //                     });
-    //                 });
-    //             });
-    //         })
-    //     );
-    // }
-

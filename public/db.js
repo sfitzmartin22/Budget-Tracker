@@ -34,17 +34,20 @@ function checkDatabase() {
                     "Content-Type": "application/json",
                 }, 
             })
-            .then((response) => response.json ())
+            .then((response => response.json ())
             .then((res) => {
                 if (res.length !== 0) {
-                    transaction = db.transaction("pending", "readwrite");
-                    const currentStore = transaction.objectStore("pending");
-                    currentStore.clear();
+                   let transaction = db.transaction("pending", "readwrite");
+                   let store = transaction.objectStore("pending");
+                    store.clear();
                     console.log("Store is cleared!");
-                }
-            });
-        }
+                };
+            })
+            )
     };
+
+
+    }
 }
 
 
