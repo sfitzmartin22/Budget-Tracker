@@ -1,4 +1,4 @@
-const WebpackManifest = requirerequire('webpack-pwa-manifest');
+const WebpackManifest = require('webpack-pwa-manifest');
 const path = require('path');
 
 const config = {
