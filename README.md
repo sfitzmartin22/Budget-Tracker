@@ -4,7 +4,10 @@
   ![Badge](https://img.shields.io/badge/License-MIT-yellow.svg)
 
   ## Description
-  This application allows you to track your budget even without being connected to the internet.  It is available in a PWA using Manifest and is delivered via a webpack
+  This application allows you to track your budget even without being connected to the internet.  It is available in a PWA using Manifest and is delivered via a webpack.
+
+  Link to Application (https://tranquil-escarpment-71827.herokuapp.com/)
+
  
   ## Table of Contents
   - [Description](#description)
