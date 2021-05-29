@@ -1,33 +1,28 @@
+const request = indexedDB.open("BudgetDB", 1);
 let db;
-let budgetVersion;
 
-const request = indexedDB.open("BudgetDB", budgetVersion || 21);
-
-request.onupgradeneeded = function (e) {
+request.onupgradeneeded = ({ target }) => {
     console.log("Upgrade needed in IndexDB");
-
-
-const { oldVersion } = e;
-const newVersion = e.newVersion || db.version;
-
-console.log(`DB Updated from version ${oldVersion} to ${newVersion}`);
-
-db = e.target.result;
-
-if(db.objectStoreNames.length === 0) { 
-    db.createObjectStore('BudgetStore', { autoincrement: true});
-}};
-
-request.onerror = function (e) {
-    console.log(e.target.errorcode);
+const db = target.result;
+db.createObjectStore('pending', { autoincrement: true});
 };
+
+request.onsuccess = ({ target }) => {
+    db = target.result;
+  
+    // check if app is online before reading from db
+    if (navigator.onLine) {
+      checkDatabase();
+    }
+  };
+
 
 function checkDatabase() {
     console.log('Checking database');
 
-    let transaction = db.transaction(["BudgetStore"], "readwrite");
-    const store = transaction.objectStore("BudgetStore");
-    const getAll = store.getAll();
+    let transaction = db.transaction("pending", "readwrite");
+    let store = transaction.objectStore("pending");
+    let getAll = store.getAll();
 
     getAll.onsuccess = function () {
         if (getAll.result.length > 0) {
@@ -42,8 +37,8 @@ function checkDatabase() {
             .then((response) => response.json ())
             .then((res) => {
                 if (res.length !== 0) {
-                    transaction = db.transaction(["BudgetStore"], "readwrite");
-                    const currentStore = transaction.objectStore("BudgetStore");
+                    transaction = db.transaction("pending", "readwrite");
+                    const currentStore = transaction.objectStore("pending");
                     currentStore.clear();
                     console.log("Store is cleared!");
                 }
@@ -52,20 +47,11 @@ function checkDatabase() {
     };
 }
 
-request.onsuccess = function (e) {
-    console.log("success");
-    db = e.target.result;
-
-    if (navigator.onLine) {
-        console.log("Backend is now online");
-        checkDatabase();
-    }
-};
 
 const saveRecord = (record) => {
     console.log("Save record has been invoked");
-    const transaction = db.transaction(["BudgetStore"], "readwrite");
-    const store = transaction.objectStore("BudgetStore");
+    let transaction = db.transaction("pending", "readwrite");
+    let store = transaction.objectStore("pending");
     store.add(record);
 };
 
